@@ -33,7 +33,7 @@ def penalise_early_end(model, strength=5.0):
 
 
 def encode_voice(model, processor, wav):
-    audio = processor.audio_processor(str(wav), return_tensors="pt")["audio"]
+    audio = processor.audio_processor(str(wav), return_tensors="pt")["audio"].to(model.device, model.dtype)
     with torch.no_grad():
         enc = model.acoustic_tokenizer.encode(audio)
     return {"acoustic_mean": enc.mean.cpu(), "acoustic_std": enc.std}
@@ -46,11 +46,13 @@ def main():
     ap.add_argument("--prompts", nargs="*", default=DEFAULT_PROMPTS)
     ap.add_argument("--cfg-scale", type=float, default=3.0)
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--device", default="cpu", help="cpu or mps")
+    ap.add_argument("--dtype", default="float32", choices=["float32", "bfloat16", "float16"])
     args = ap.parse_args()
 
     processor = KugelAudioProcessor.from_pretrained(MODEL_ID)
-    model = KugelAudioForConditionalGenerationInference.from_pretrained(MODEL_ID, dtype=torch.float32)
-    model.eval()
+    model = KugelAudioForConditionalGenerationInference.from_pretrained(MODEL_ID, dtype=getattr(torch, args.dtype))
+    model.to(args.device).eval()
     penalise_early_end(model)
     voices = {lang: encode_voice(model, processor, reference(f"{args.reference}-{lang}")) for lang in ("nl", "en")}
     model.model.strip_encoders()
@@ -60,6 +62,7 @@ def main():
         lang = name[:2]
         torch.manual_seed(args.seed)
         inputs = processor(text=text, voice_cache=voices[lang], return_tensors="pt")
+        inputs = {k: v.to(args.device) if isinstance(v, torch.Tensor) else v for k, v in inputs.items()}
         with Measure() as m, torch.no_grad():
             out = model.generate(**inputs, cfg_scale=args.cfg_scale, max_new_tokens=2048, show_progress=False)
         speech = out.speech_outputs[0]

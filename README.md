@@ -204,6 +204,8 @@ Qwen2.5 tokenizer.
 ```sh
 uv venv .venv-kugel && uv pip install -p .venv-kugel kugelaudio-open
 .venv-kugel/bin/python scripts/kugelaudio_tts.py
+# Apple Silicon GPU instead of the CPU (much faster, still slower than real time):
+PYTORCH_ENABLE_MPS_FALLBACK=1 .venv-kugel/bin/python scripts/kugelaudio_tts.py --device mps --dtype bfloat16
 ```
 
 The script encodes `references/piper-female-{nl,en}-reference.wav` into voice caches,

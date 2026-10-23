@@ -37,7 +37,11 @@ COLLECTIONS = {
         "Microsoft VibeVoice-Realtime-0.5B demo presets `nl-Spk1_woman` and `en-Emma_woman`. "
         "**Research reference only; not covered by the CC BY grant.**"),
     "samples/piper/nl_NL-mls-medium-speakers": ("Piper nl_NL-mls-medium: all 52 speakers", "mls-speakers",
-        "Every speaker of `nl_NL-mls-medium` saying nl-short. File name: `mls-<speaker id>-<MLS speaker>.wav`."),
+        "Every speaker of `nl_NL-mls-medium` saying nl-short. File name: `mls-<speaker id>-<MLS speaker>.wav`. "
+        "Note: this voice handles short sentences poorly. For all 52 speakers the last word ('tien') is "
+        "garbled, and about half garble 'Goedemorgen'. Adding a clause ('…, zoals we hadden afgesproken.') "
+        "fixed 'half tien' for all speakers in a Whisper check. Likely cause: training on long LibriVox "
+        "audiobook clips. Pad short replies or prefer a single-speaker voice such as Ronnie."),
     "references": ("Cloning references", "references",
         "Piper clips used as voice-cloning references (see the main README for how to regenerate them)."),
 }

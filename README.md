@@ -64,8 +64,13 @@ The cloning references are in [`references/`](references).
 - **Pocket TTS** (cloning the female Dutch reference) was the preferred Dutch voice in this
   evaluation: natural, streaming, and light enough to run alongside other work. Single seeds
   still vary occasionally.
-- **Piper** is fast and robust. The female `nl_NL-mls-medium` speakers append babble after the
-  last word of the short prompt and are less intelligible than Ronnie.
+- **Piper** is fast and robust. The multi-speaker `nl_NL-mls-medium` voice, however, handles
+  short sentences poorly. In `nl-short`, every one of its 52 speakers garbles the final word
+  "tien", and about half garble "Goedemorgen". Adding a clause ("…, zoals we hadden
+  afgesproken.") fixed "half tien" for all 52 speakers and "Goedemorgen" for most. The
+  phonemes are identical to Ronnie's, so this comes from the voice model, most likely from its
+  training on long LibriVox audiobook clips. Ronnie, trained on clean single sentences, has no
+  such problem.
 - **OmniVoice, Parkiet and Chatterbox** all produced accurate Dutch, but none of them streams,
   so the whole reply is generated before playback.
 - **Kitten's Dutch voices**: by pitch, DutchWeatherPresenter and DutchBaker sound female and

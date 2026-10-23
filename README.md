@@ -44,6 +44,7 @@ Every engine uses the same prompts (`scripts/common.py`):
 | [`samples/omnivoice`](samples/omnivoice) | [OmniVoice](https://huggingface.co/k2-fsa/OmniVoice) (`mlx-community/OmniVoice-bf16`, MLX) | Clones the female references | No |
 | [`samples/parkiet`](samples/parkiet) | [Parkiet](https://huggingface.co/pevers/parkiet) (Dutch Dia, MPS) | Clones the Dutch female reference | No, slow |
 | [`samples/chatterbox`](samples/chatterbox) | [Chatterbox Multilingual V3](https://huggingface.co/ResembleAI/chatterbox) (MPS) | Clones the female references | No, slow |
+| [`samples/vibevoice`](samples/vibevoice) | [VibeVoice-Realtime-0.5B](https://huggingface.co/microsoft/VibeVoice-Realtime-0.5B) (MPS) — **research only** | Demo presets `nl-Spk1_woman`, `en-Emma_woman` (no cloning) | Yes, but slower than real time |
 
 The cloning references are in [`references/`](references).
 
@@ -53,7 +54,8 @@ The cloning references are in [`references/`](references).
   Whisper heard "Stationsstraat 24" as "Stationsstraat wauwer" (Pocket) and "Stassenstraat 64"
   (Audio8). Writing the number out (`nl-long-normalized`) fixed both. Piper (espeak-ng)
   expands digits itself; KittenTTS, OmniVoice, Parkiet and Chatterbox read the raw "24"
-  correctly, although Kitten's DutchBaker voice said "44". Dates, times, amounts and
+  correctly, although Kitten's DutchBaker voice said "44". VibeVoice read "24" correctly,
+  but in the normalised run Whisper heard "Tassonstraat" instead of "Stationsstraat". Dates, times, amounts and
   abbreviations need the same treatment.
 - **Pocket TTS** (cloning the female Dutch reference) was the preferred Dutch voice in this
   evaluation: natural, streaming, and light enough to run alongside other work. Single seeds
@@ -169,15 +171,22 @@ uv pip install -p .venv-cb torch==2.11.0 torchaudio==2.11.0 transformers==5.2.0 
 
 On MPS, memory use can grow very large; close other GPU workloads.
 
-### VibeVoice-Realtime-0.5B (research only, no samples)
+### VibeVoice-Realtime-0.5B (research only)
 
+The model card limits
 [microsoft/VibeVoice-Realtime-0.5B](https://huggingface.co/microsoft/VibeVoice-Realtime-0.5B)
-is licensed for research only, and Dutch is an experimental, unsupported language. Its samples
-are therefore **not** published. `scripts/vibevoice_tts.py` lets researchers reproduce the
-listening trial with the upstream demo voices (`nl-Spk1_woman`, `en-Emma_woman`). It needs
-`torch==2.7.1` (newer versions reject the voice presets) and a checkout of
-[microsoft/VibeVoice](https://github.com/microsoft/VibeVoice). Do not remove its audible
-disclaimer or watermark.
+to research use, and calls Dutch an experimental, unsupported language. The samples in
+`samples/vibevoice/` are shared only as a research reference for comparison. They are not
+covered by this repository's CC BY grant, and must not be used in products or real-world
+applications.
+
+`scripts/vibevoice_tts.py` reproduces the listening trial with the upstream demo voices
+(`nl-Spk1_woman`, `en-Emma_woman`). It needs `torch==2.7.1` (newer versions reject the voice
+presets) and a checkout of [microsoft/VibeVoice](https://github.com/microsoft/VibeVoice).
+
+The card says an audible AI disclaimer is embedded in every output. None is audible in these
+files, and the open-source `vibevoice` package contains no disclaimer or watermark code. The
+output was saved unmodified; nothing was removed.
 
 ## Licences and attribution
 
@@ -194,7 +203,7 @@ disclaimer or watermark.
 | OmniVoice | Apache-2.0 | No separate licence stated; audio tokenizer under the Boson Higgs Audio 2 Community License | Outputs may not be used to improve other LLMs |
 | Parkiet | MIT; DAC codec MIT | RAIL-M (use restrictions) | — |
 | Chatterbox | MIT | MIT | Carries an inaudible Perth watermark |
-| VibeVoice | MIT | Research only | No samples published |
+| VibeVoice | MIT | MIT metadata, but the card limits use to research | Samples are a research reference only; not CC BY |
 
 Check each model's own card before using it: licences change, and this table is a summary,
 not legal advice.

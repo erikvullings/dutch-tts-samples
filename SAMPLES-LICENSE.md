@@ -1,6 +1,6 @@
 # Audio licence and attribution
 
-The audio in `samples/` and `references/` is **AI-generated**. It is released under the
+The audio in `samples/` and `references/` is **AI-generated**. Except for `samples/vibevoice/` (see below), it is released under the
 [Creative Commons Attribution 4.0 International licence (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/),
 to the extent the generating models allow, and subject to the output terms below.
 Attribute it as: "Dutch TTS samples, Erik Vullings (github.com/erikvullings/dutch-tts-samples), CC BY 4.0",
@@ -34,4 +34,11 @@ Do not present these files as recordings of a real person.
 - **Audio8** ([Edge0](https://huggingface.co/Edge0/Audio8-TTS-Preview-0.6B-ONNX-INT4), Apache-2.0)
   and **Piper** voices: no additional output terms.
 
-VibeVoice output is research-only and is therefore not included.
+## Excluded from the CC BY grant: VibeVoice
+
+The files in `samples/vibevoice/` were generated with
+[microsoft/VibeVoice-Realtime-0.5B](https://huggingface.co/microsoft/VibeVoice-Realtime-0.5B),
+whose model card limits use to research. They are **not** licensed under CC BY 4.0. They are
+shared only as a research reference for listening comparisons, and must not be used in
+products or real-world applications. They use the upstream demo voice presets, whose source
+speakers are not documented. The output was saved unmodified.

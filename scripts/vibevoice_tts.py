@@ -3,7 +3,8 @@
 
 Microsoft limits this model to research; Dutch is outside its supported scope. Run it from a
 checkout of microsoft/VibeVoice (for the demo voice presets) with torch==2.7.1. The output is
-written unmodified; do not remove any disclaimer or watermark. No samples are published here.
+written unmodified; do not remove any disclaimer or watermark. The samples in
+samples/vibevoice/ are a research reference only.
 """
 
 import argparse

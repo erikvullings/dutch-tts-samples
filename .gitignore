@@ -1,0 +1,8 @@
+output/
+models/
+runtime/
+.venv*/
+__pycache__/
+*.pyc
+*-results.json
+.DS_Store

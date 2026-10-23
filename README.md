@@ -5,9 +5,10 @@ all generated locally on an Apple Silicon Mac. Few Dutch samples are published f
 models, so this repository collects one fixed set of prompts rendered by several engines,
 plus the scripts to reproduce them on your own machine.
 
-> **All audio in this repository is AI-generated.** No real person's voice was cloned: the
-> cloning references are themselves synthetic Piper voices trained on CC0, public-domain or
-> CC BY 4.0 speech data (see [Licences](#licences-and-attribution)).
+> **All audio in this repository is AI-generated.** No recording of a real person was used as
+> a cloning reference: the references are themselves synthetic Piper voices trained on CC0,
+> public-domain or CC BY 4.0 speech data (see [Licences](#licences-and-attribution) and
+> [Voice cloning and consent](#voice-cloning-and-consent)).
 
 The samples come from an evaluation of local Dutch speech for a voice assistant. They are a
 listening aid, not a benchmark.
@@ -48,6 +49,8 @@ Every engine uses the same prompts (`scripts/common.py`):
 | [`samples/omnivoice`](samples/omnivoice) | [OmniVoice](https://huggingface.co/k2-fsa/OmniVoice) (`mlx-community/OmniVoice-bf16`, MLX) | Clones the female references | No |
 | [`samples/parkiet`](samples/parkiet) | [Parkiet](https://huggingface.co/pevers/parkiet) (Dutch Dia, MPS) | Clones the Dutch female reference | No, slow |
 | [`samples/chatterbox`](samples/chatterbox) | [Chatterbox Multilingual V3](https://huggingface.co/ResembleAI/chatterbox) (MPS) | Clones the female references | No, slow |
+| [`samples/kugelaudio`](samples/kugelaudio) | [KugelAudio-0-Open](https://huggingface.co/kugelaudio/kugelaudio-0-open) (PyTorch, CPU) | Voice encoded from the female references | No, slow |
+| [`samples/fish-drama3`](samples/fish-drama3) | [Fish Audio Drama 3](https://huggingface.co/fishaudio/drama-3) (`mlx-community/fish-audio-drama-3-4bit`, MLX). **Built with Fish Audio.** | Clones the female references | Supported, not used here |
 | [`samples/vibevoice`](samples/vibevoice) | [VibeVoice-Realtime-0.5B](https://huggingface.co/microsoft/VibeVoice-Realtime-0.5B) (MPS) — **research only** | Demo presets `nl-Spk1_woman`, `en-Emma_woman` (no cloning) | Yes, but slower than real time |
 
 The cloning references are in [`references/`](references).
@@ -57,8 +60,8 @@ The cloning references are in [`references/`](references).
 - **Normalise numbers before synthesis.** Pocket's Dutch pack and Audio8 garble raw digits:
   Whisper heard "Stationsstraat 24" as "Stationsstraat wauwer" (Pocket) and "Stassenstraat 64"
   (Audio8). Writing the number out (`nl-long-normalized`) fixed both. Piper (espeak-ng)
-  expands digits itself; KittenTTS, OmniVoice, Parkiet and Chatterbox read the raw "24"
-  correctly, although Kitten's DutchBaker voice said "44". VibeVoice read "24" correctly,
+  expands digits itself; KittenTTS, OmniVoice, Parkiet, Chatterbox, KugelAudio and Fish
+  Drama 3 read the raw "24" correctly, although Kitten's DutchBaker voice said "44". VibeVoice read "24" correctly,
   but in the normalised run Whisper heard "Tassonstraat" instead of "Stationsstraat". Dates, times, amounts and
   abbreviations need the same treatment.
 - **Pocket TTS** (cloning the female Dutch reference) was the preferred Dutch voice in this
@@ -73,6 +76,14 @@ The cloning references are in [`references/`](references).
   such problem.
 - **OmniVoice, Parkiet and Chatterbox** all produced accurate Dutch, but none of them streams,
   so the whole reply is generated before playback.
+- **KugelAudio** produced word-perfect Whisper transcripts for every prompt. It is a large
+  model (about 19 GB of weights); on this Mac it ran on the CPU and was by far the slowest
+  engine in the set, and it does not stream.
+- **Fish Audio Drama 3** (4-bit MLX) also produced word-perfect transcripts, but inserted long
+  silent pauses between sentences: up to about 2 s in `nl-long` and about 7 s in
+  `nl-long-normalized`. The clips are published unedited. Whether this comes from the
+  4-bit conversion, the mlx-audio port or the model itself was not investigated. Its weights
+  are large and it needs a lot of unified memory.
 - **Kitten's Dutch voices**: by pitch, DutchWeatherPresenter and DutchBaker sound female and
   GrandpaStory male. Whether they sound Netherlands Dutch or Flemish was not verified.
 - Whisper writes a spoken "vierentwintig" back as "24", so transcripts confirm the words, not
@@ -183,6 +194,39 @@ uv pip install -p .venv-cb torch==2.11.0 torchaudio==2.11.0 transformers==5.2.0 
 
 On MPS, memory use can grow very large; close other GPU workloads.
 
+### KugelAudio-0-Open
+
+Install [kugelaudio-open](https://github.com/Kugelaudio/kugelaudio-open) (MIT) in its own
+environment; the first run downloads about 19 GB from
+[kugelaudio/kugelaudio-0-open](https://huggingface.co/kugelaudio/kugelaudio-0-open) and the
+Qwen2.5 tokenizer.
+
+```sh
+uv venv .venv-kugel && uv pip install -p .venv-kugel kugelaudio-open
+.venv-kugel/bin/python scripts/kugelaudio_tts.py
+```
+
+The script encodes `references/piper-female-{nl,en}-reference.wav` into voice caches,
+penalises the early speech-end token (as the upstream examples do) and seeds each prompt.
+Tested with torch 2.9.1 and transformers 4.57.3. Outputs carry an inaudible AudioSeal
+watermark, added by the package.
+
+### Fish Audio Drama 3 (MLX, 4-bit)
+
+**Built with Fish Audio.** Read the
+[Fish Audio Community License](https://huggingface.co/mlx-community/fish-audio-drama-3-4bit/blob/main/LICENSE)
+first. The 4-bit conversion by the mlx-community needs about 22 GB of disk space and a Mac
+with plenty of unified memory.
+
+```sh
+uv venv .venv-mlx && uv pip install -p .venv-mlx mlx-audio==0.6.1
+.venv-mlx/bin/python scripts/mlx_clone.py --model mlx-community/fish-audio-drama-3-4bit \
+  --prefix fish-drama3 --no-language --extra '{"temperature":0.7,"top_p":0.7,"top_k":30}'
+```
+
+Older Fish models were not included: Fish Speech 1.5 is CC BY-NC-SA 4.0, and OpenAudio S2 Pro
+uses a research and non-commercial licence.
+
 ### VibeVoice-Realtime-0.5B (research only)
 
 The model card limits
@@ -200,6 +244,16 @@ The card says an audible AI disclaimer is embedded in every output. None is audi
 files, and the open-source `vibevoice` package contains no disclaimer or watermark code. The
 output was saved unmodified; nothing was removed.
 
+## Voice cloning and consent
+
+Most engines here clone the Piper references in `references/`. Those are synthetic voices,
+but `piper-female-nl-reference.wav` comes from `nl_NL-mls-medium` speaker 12500, a model voice
+trained on audiobook recordings by a LibriVox volunteer (released via MLS under CC BY 4.0).
+The clones therefore may resemble that reader. Several model licences (Pocket TTS,
+KugelAudio, Fish Audio) forbid imitating an identifiable person without consent; this
+repository treats the Piper voice as synthetic, but if you build a product, prefer a
+reference voice you recorded yourself with consent.
+
 ## Licences and attribution
 
 - **Code** (`scripts/`): [MIT](LICENSE).
@@ -215,6 +269,8 @@ output was saved unmodified; nothing was removed.
 | OmniVoice | Apache-2.0 | No separate licence stated; audio tokenizer under the Boson Higgs Audio 2 Community License | Outputs may not be used to improve other LLMs |
 | Parkiet | MIT; DAC codec MIT | RAIL-M (use restrictions) | — |
 | Chatterbox | MIT | MIT | Carries an inaudible Perth watermark |
+| KugelAudio | MIT | MIT | Card prohibits deepfakes and impersonation without consent; inaudible AudioSeal watermark |
+| Fish Audio Drama 3 | mlx-audio MIT | Fish Audio Community License v1.0 | "Built with Fish Audio"; no imitating an identifiable person without consent; outputs may not train speech or foundation models; commercial use only below USD 500k revenue; hosted services need a separate licence |
 | VibeVoice | MIT | MIT metadata, but the card limits use to research | Samples are a research reference only; not CC BY |
 
 Check each model's own card before using it: licences change, and this table is a summary,

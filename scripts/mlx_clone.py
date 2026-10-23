@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Voice cloning through mlx-audio (used for mlx-community/OmniVoice-bf16)."""
+"""Voice cloning through mlx-audio (OmniVoice-bf16, Fish Audio Drama-3 4-bit)."""
 
 import argparse
 import json
@@ -21,6 +21,7 @@ def main():
     ap.add_argument("--reference", default="piper-female")
     ap.add_argument("--extra", default="{}", help="JSON kwargs passed to generate()")
     ap.add_argument("--prompts", nargs="*", default=DEFAULT_PROMPTS)
+    ap.add_argument("--no-language", action="store_true", help="omit the language kwarg (Fish Drama-3)")
     args = ap.parse_args()
     extra = json.loads(args.extra)
 
@@ -32,8 +33,9 @@ def main():
         mx.reset_peak_memory()
         chunks, sr = [], None
         with Measure() as m:
+            kwargs = {} if args.no_language else {"language": lang}
             for res in model.generate(text=text, ref_audio=str(reference(f"{args.reference}-{lang}")),
-                                      ref_text=REFERENCES[lang], language=lang, **extra):
+                                      ref_text=REFERENCES[lang], **kwargs, **extra):
                 m.chunk()
                 chunks.append(np.asarray(res.audio, dtype=np.float32).reshape(-1))
                 sr = res.sample_rate

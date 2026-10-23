@@ -13,8 +13,8 @@ Do not present these files as recordings of a real person.
 | Files | Source | Licence / attribution |
 | --- | --- | --- |
 | `piper-nl-*`, `references/piper-nl-reference.wav`, `pocket-nl-*`, `pocket-en-*`, `audio8-*` | Piper `nl_NL-ronnie-medium` (NabuCasa voice dataset), `en_US-kristin-medium` (LibriVox) | CC0 / public domain |
-| `piper-female-en-*`, `references/piper-female-en-reference.wav` | Piper `en_US-ljspeech-medium` (LJ Speech) | Public domain |
-| `piper-female-nl-*`, `piper/nl_NL-mls-medium-speakers/*`, `references/piper-female-nl-reference.wav`, and every sample cloned from that reference (`pocket-female-nl-*`, `omnivoice-nl-*`, `parkiet-*`, `chatterbox-nl-*`) | Piper `nl_NL-mls-medium`, trained on Multilingual LibriSpeech | **Attribution required:** "Multilingual LibriSpeech (MLS)", V. Pratap et al., 2020, [OpenSLR 94](https://www.openslr.org/94/), CC BY 4.0; source recordings from [LibriVox](https://librivox.org/) |
+| `piper-female-en-*`, `references/piper-female-en-reference.wav`, `kugelaudio-en-*`, `fish-drama3-en-*` | Piper `en_US-ljspeech-medium` (LJ Speech) | Public domain |
+| `piper-female-nl-*`, `piper/nl_NL-mls-medium-speakers/*`, `references/piper-female-nl-reference.wav`, and every sample cloned from that reference (`pocket-female-nl-*`, `omnivoice-nl-*`, `parkiet-*`, `chatterbox-nl-*`, `kugelaudio-nl-*`, `fish-drama3-nl-*`) | Piper `nl_NL-mls-medium`, trained on Multilingual LibriSpeech | **Attribution required:** "Multilingual LibriSpeech (MLS)", V. Pratap et al., 2020, [OpenSLR 94](https://www.openslr.org/94/), CC BY 4.0; source recordings from [LibriVox](https://librivox.org/) |
 
 ## Output terms of the generating models
 
@@ -31,6 +31,16 @@ Do not present these files as recordings of a real person.
   restrictions in its licence apply.
 - **Chatterbox** ([ResembleAI/chatterbox](https://huggingface.co/ResembleAI/chatterbox), MIT):
   outputs carry an inaudible Perth watermark.
+- **KugelAudio** ([kugelaudio/kugelaudio-0-open](https://huggingface.co/kugelaudio/kugelaudio-0-open), MIT):
+  the card prohibits deepfakes, misleading content and impersonation without consent.
+  Outputs carry an inaudible AudioSeal watermark.
+- **Fish Audio Drama 3** ([fishaudio/drama-3](https://huggingface.co/fishaudio/drama-3), via
+  [mlx-community/fish-audio-drama-3-4bit](https://huggingface.co/mlx-community/fish-audio-drama-3-4bit)):
+  **Built with Fish Audio.** These Fish Audio Materials are licensed under the Fish Audio
+  Community License, Version 1.0. Copyright © 39 AI, INC. All Rights Reserved. The licence
+  forbids using outputs to imitate an identifiable person without consent, to impersonate or
+  deceive, or to create, train, distil or improve speech, audio, voice or foundational
+  generative models (training detectors of synthetic audio is allowed).
 - **Audio8** ([Edge0](https://huggingface.co/Edge0/Audio8-TTS-Preview-0.6B-ONNX-INT4), Apache-2.0)
   and **Piper** voices: no additional output terms.
 

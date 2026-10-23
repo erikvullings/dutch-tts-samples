@@ -33,6 +33,14 @@ COLLECTIONS = {
     "samples/chatterbox": ("Chatterbox Multilingual V3", "chatterbox",
         "Resemble AI Chatterbox Multilingual V3 (MPS), cloning the female references. "
         "Outputs carry an inaudible Perth watermark."),
+    "samples/kugelaudio": ("KugelAudio-0-Open", "kugelaudio",
+        "kugelaudio/kugelaudio-0-open (MIT, PyTorch on CPU), with voices encoded from the female references. "
+        "Outputs carry an inaudible AudioSeal watermark."),
+    "samples/fish-drama3": ("Fish Audio Drama 3 (Built with Fish Audio)", "fish-drama3",
+        "Fish Audio Drama 3 (mlx-community/fish-audio-drama-3-4bit, MLX), cloning the female references. "
+        "**Built with Fish Audio.** Fish Audio Community License v1.0: no imitating an identifiable person "
+        "without consent, and outputs may not train speech or foundation models. Note the long silent "
+        "pauses between sentences in the long prompts (published unedited)."),
     "samples/vibevoice": ("VibeVoice-Realtime-0.5B (research only)", "vibevoice",
         "Microsoft VibeVoice-Realtime-0.5B demo presets `nl-Spk1_woman` and `en-Emma_woman`. "
         "**Research reference only; not covered by the CC BY grant.**"),

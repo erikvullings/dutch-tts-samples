@@ -12,6 +12,10 @@ plus the scripts to reproduce them on your own machine.
 The samples come from an evaluation of local Dutch speech for a voice assistant. They are a
 listening aid, not a benchmark.
 
+**[▶ Listen to all samples in your browser](https://erikvullings.github.io/dutch-tts-samples/)**:
+a player page with every engine side by side. Each sample folder also has a README that links
+to its section of the player page.
+
 ## No performance numbers
 
 **This repository deliberately publishes no timing, real-time-factor or memory figures.** Other
@@ -82,6 +86,9 @@ A warm-up sentence is synthesised first and discarded. Check your output with Wh
 ```sh
 WHISPER_MODEL=~/models/ggml-large-v3-turbo-q8_0.bin scripts/transcribe.sh output/*.wav
 ```
+
+After adding or renaming samples, run `python3 scripts/build_pages.py` to regenerate
+`index.html` (the player page) and the folder READMEs.
 
 ### Piper
 

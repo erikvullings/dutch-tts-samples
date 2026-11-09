@@ -28,6 +28,18 @@ COLLECTIONS = {
         "`kitten-baker-*`: DutchBaker. Powered by KittenML."),
     "samples/omnivoice": ("OmniVoice", "omnivoice",
         "k2-fsa OmniVoice (mlx-community/OmniVoice-bf16), cloning the female references."),
+    "samples/lfm3-audio": ("LFM3-Audio-2B (MLX 4-bit)", "lfm3-audio",
+        "LiquidAI LFM3-Audio-2B (4-bit MLX via MLX-VLM, revision 221ddc778422af5354d689b450f1a5e21d2b5616), generating Dutch and American English with a female voice."),
+    "samples/audio8-realistic-air": ("Audio8 TTS Realistic Air (MLX 8-bit)", "audio8-realistic-air",
+        "Edge0 Audio8 TTS Realistic Air, using the community MLX 8-bit selective conversion. Dutch and English, no voice reference."),
+    "samples/higgs-tts3": ("Higgs TTS 3 (MLX 6-bit)", "higgs-tts3",
+        "Boson AI Higgs TTS 3 using a community MLX 6-bit conversion. Research/non-commercial use only. Built with Higgs TTS 3 licensed from Boson AI USA, Inc."),
+    "samples/voxcpm2": ("VoxCPM2 (MLX 4-bit)", "voxcpm2",
+        "OpenBMB VoxCPM2, using the MLX 4-bit conversion and its natural-language voice design."),
+    "samples/fish-s2-pro": ("Fish Audio S2 Pro (MLX 8-bit)", "fish-s2-pro",
+        "Fish Audio S2 Pro using the MLX 8-bit conversion. Research/non-commercial use only. Built with Fish Audio."),
+    "samples/supertonic3": ("Supertonic 3", "supertonic3",
+        "Supertone Supertonic 3 (ONNX Runtime), using preset voice F1 for Dutch and English."),
     "samples/parkiet": ("Parkiet", "parkiet",
         "pevers/parkiet (Dutch Dia, MPS), cloning the Dutch female reference."),
     "samples/chatterbox": ("Chatterbox Multilingual V3", "chatterbox",
@@ -171,7 +183,9 @@ def build_readme(folder, title, anchor, desc):
         lines.append(f"| [{f.name}]({url}) | {text_for(prompt)} |")
     lines += ["", "All audio is AI-generated. See [SAMPLES-LICENSE.md]"
               f"({'../' * len(Path(folder).parts)}SAMPLES-LICENSE.md) for licence and attribution.", ""]
-    (ROOT / folder / "README.md").write_text("\n".join(lines))
+    sample_dir = ROOT / folder
+    sample_dir.mkdir(parents=True, exist_ok=True)
+    (sample_dir / "README.md").write_text("\n".join(lines))
 
 
 if __name__ == "__main__":

@@ -21,8 +21,8 @@ to its section of the player page.
 
 **This repository deliberately publishes no timing, real-time-factor or memory figures.** Other
 workloads shared the GPU during the original trials, so the numbers were not reliable. The
-scripts still measure first-audio delay, real-time factor and peak memory, and write them to
-`output/<name>-results.json`, so you can benchmark on your own hardware. Only qualitative
+benchmarking scripts measure first-audio delay, real-time factor and peak memory, and write
+them to `output/<name>-results.json`, so you can benchmark on your own hardware. Only qualitative
 observations are given below (for example, whether an engine streams).
 
 ## Prompts
@@ -47,6 +47,12 @@ Every engine uses the same prompts (`scripts/common.py`):
 | [`samples/audio8`](samples/audio8) | [Audio8 TTS Preview 0.6B](https://huggingface.co/Edge0/Audio8-TTS-Preview-0.6B-ONNX-INT4), ONNX INT4 on CPU | Clones the Ronnie/Kristin references | Yes, but much slower than real time on CPU |
 | [`samples/kittentts2`](samples/kittentts2) | [KittenTTS 2](https://huggingface.co/KittenML/kitten-tts-2), MLX | `kitten-*`: DutchWeatherPresenter (nl), Maeve (en). `kitten-baker-*`: DutchBaker | No |
 | [`samples/omnivoice`](samples/omnivoice) | [OmniVoice](https://huggingface.co/k2-fsa/OmniVoice) (`mlx-community/OmniVoice-bf16`, MLX) | Clones the female references | No |
+| [`samples/lfm3-audio`](samples/lfm3-audio) | [LFM3-Audio-2B](https://huggingface.co/LiquidAI/LFM3-Audio-2B) ([4-bit MLX](https://huggingface.co/LiquidAI/LFM3-Audio-2B-MLX-4bit), MLX-VLM) | Dutch and American English female voice | No |
+| [`samples/audio8-realistic-air`](samples/audio8-realistic-air) | [Audio8 TTS Realistic Air](https://huggingface.co/Edge0/Audio8-TTS-Realistic-Air) (community [8-bit MLX](https://huggingface.co/groxaxo/Audio8-TTS-Realistic-Air-MLX8-Selective)) | Built-in voice, Dutch and English | No |
+| [`samples/higgs-tts3`](samples/higgs-tts3) | [Higgs TTS 3](https://huggingface.co/bosonai/higgs-tts-3-4b) (community [6-bit MLX](https://huggingface.co/whitelabel/mlx-q6-higgs-tts-3-4b)) | Built-in voice, Dutch and English | No |
+| [`samples/voxcpm2`](samples/voxcpm2) | [VoxCPM2](https://huggingface.co/openbmb/VoxCPM2) (community [4-bit MLX](https://huggingface.co/mlx-community/VoxCPM2-4bit)) | Female voice design, Dutch and English | Yes |
+| [`samples/fish-s2-pro`](samples/fish-s2-pro) | [Fish Audio S2 Pro](https://huggingface.co/fishaudio/s2-pro) (community [8-bit MLX](https://huggingface.co/mlx-community/fish-audio-s2-pro-8bit)) | Built-in voice, Dutch and English | Yes |
+| [`samples/supertonic3`](samples/supertonic3) | [Supertonic 3](https://huggingface.co/Supertone/supertonic-3), ONNX Runtime | Preset F1, Dutch and English | No |
 | [`samples/parkiet`](samples/parkiet) | [Parkiet](https://huggingface.co/pevers/parkiet) (Dutch Dia, MPS) | Clones the Dutch female reference | No, slow |
 | [`samples/chatterbox`](samples/chatterbox) | [Chatterbox Multilingual V3](https://huggingface.co/ResembleAI/chatterbox) (MPS) | Clones the female references | No, slow |
 | [`samples/kugelaudio`](samples/kugelaudio) | [KugelAudio-0-Open](https://huggingface.co/kugelaudio/kugelaudio-0-open) (PyTorch, CPU) | Voice encoded from the female references | No, slow |
@@ -54,6 +60,32 @@ Every engine uses the same prompts (`scripts/common.py`):
 | [`samples/vibevoice`](samples/vibevoice) | [VibeVoice-Realtime-0.5B](https://huggingface.co/microsoft/VibeVoice-Realtime-0.5B) (MPS) — **research only** | Demo presets `nl-Spk1_woman`, `en-Emma_woman` (no cloning) | Yes, but slower than real time |
 
 The cloning references are in [`references/`](references).
+
+### Recent Dutch TTS models on Hugging Face
+
+Checked the user-provided [Dutch text-to-speech trending list](https://huggingface.co/models?pipeline_tag=text-to-speech&language=nl&sort=trending)
+on 2026-11-09. Applying a simple reproducible filter (created in 2026 and current
+`trendingScore` of at least 7), then excluding models already represented here, surfaced these
+five distinct models:
+
+| Model | Created | Trend score | Status |
+| --- | --- | ---: | --- |
+| [Audio8 TTS Realistic Air](https://huggingface.co/Edge0/Audio8-TTS-Realistic-Air) | 2026-10-14 | 130 | Added; Dutch explicitly supported |
+| [Higgs TTS 3](https://huggingface.co/bosonai/higgs-tts-3-4b) | 2026-06-04 | 15 | Added; Dutch explicitly supported |
+| [VoxCPM2](https://huggingface.co/openbmb/VoxCPM2) | 2026-04-03 | 10 | Added; Dutch explicitly supported |
+| [Fish Audio S2 Pro](https://huggingface.co/fishaudio/s2-pro) | 2026-03-09 | 8 | Added; Dutch included among additional supported languages |
+| [Supertonic 3](https://huggingface.co/Supertone/supertonic-3) | 2026-05-06 | 7 | Added; Dutch explicitly supported |
+
+Trend scores are a snapshot and change over time. Existing Dutch-capable trending entries such as
+OmniVoice and Fish Audio Drama 3 were already represented. Model license terms are listed in
+[SAMPLES-LICENSE.md](SAMPLES-LICENSE.md).
+
+Whisper `large-v3-turbo-q8_0` transcribed all 30 LFM3 and new-model clips locally. The four new
+MLX runs were broadly faithful to the Dutch prompts; Whisper heard "Godemorgen" in both long
+Audio8 clips. Supertonic's Dutch long clips produced more ASR substitutions ("ADES" and
+"Stationstraat"), and its English long clip rendered Utrecht as "Autrecht". LFM3's raw-number
+Dutch long clip was heard as "44" and "Staciaanstraat"; these are ASR spot checks, not human
+listening judgments.
 
 ### Observations (single listener, plus Whisper transcripts)
 
@@ -91,16 +123,19 @@ The cloning references are in [`references/`](references).
 
 ## Reproducing the samples
 
-The scripts write to `output/` (set `TTS_OUTPUT_DIR` to change it) and look for weights under
-`models/` (set `TTS_MODELS_DIR`). Both folders are ignored by git. Each engine needs its own
-Python environment; [uv](https://docs.astral.sh/uv/) keeps them small and disposable.
+Most scripts write to `output/` (set `TTS_OUTPUT_DIR` to change it) and look for weights under
+`models/` (set `TTS_MODELS_DIR`). Both folders are ignored by git. The LFM3-Audio runner writes
+directly to its sample folder. Each engine needs its own Python environment;
+[uv](https://docs.astral.sh/uv/) keeps them small and disposable.
 Common options: `--prompts nl-short en` (prompt names or a language prefix), `--reference`
 (a prefix in `references/`) and `--prefix` (output file prefix).
 
 A warm-up sentence is synthesised first and discarded. Check your output with Whisper:
 
 ```sh
-WHISPER_MODEL=~/models/ggml-large-v3-turbo-q8_0.bin scripts/transcribe.sh output/*.wav
+mkdir -p ~/models/whisper
+hf download ggerganov/whisper.cpp ggml-large-v3-turbo-q8_0.bin --local-dir ~/models/whisper
+WHISPER_MODEL=~/models/whisper/ggml-large-v3-turbo-q8_0.bin scripts/transcribe.sh output/*.wav
 ```
 
 After adding or renaming samples, run `python3 scripts/build_pages.py` to regenerate
@@ -172,6 +207,48 @@ Dutch runs with the built-in English text normaliser switched off.
 uv venv .venv-mlx && uv pip install -p .venv-mlx mlx-audio==0.6.1
 .venv-mlx/bin/python scripts/mlx_clone.py
 ```
+
+### LFM3-Audio-2B (MLX)
+
+This run uses the smaller 4-bit MLX checkpoint (revision
+`221ddc778422af5354d689b450f1a5e21d2b5616`), about 1.73 GB including its audio codec. The
+model card recommends 8-bit for a better accuracy/size trade-off, but 4-bit fits comfortably
+on this Apple Silicon machine. The checkpoint is
+licensed under the [LFM Open License v1.0](https://huggingface.co/LiquidAI/LFM3-Audio-2B-MLX-4bit/blob/221ddc778422af5354d689b450f1a5e21d2b5616/LICENSE);
+commercial use is limited to entities below USD 10 million in annual revenue. The
+[sample README](samples/lfm3-audio/README.md) records the model and license details.
+
+```sh
+uv venv --python 3.12 .venv-lfm3
+uv pip install -p .venv-lfm3 "mlx-vlm==0.7.11"
+hf download LiquidAI/LFM3-Audio-2B-MLX-4bit --revision 221ddc778422af5354d689b450f1a5e21d2b5616 \
+  --local-dir models/lfm3-audio-2b-mlx-4bit
+.venv-lfm3/bin/python scripts/lfm3_audio_tts.py --model models/lfm3-audio-2b-mlx-4bit
+# Remove this dedicated download after generation; samples and script remain in the repo.
+rm -rf models/lfm3-audio-2b-mlx-4bit
+```
+
+### Recent Dutch trending models (MLX and ONNX)
+
+The scripts for the four MLX conversions and Supertonic 3 share the canonical prompts. Install
+the runtimes and download each pinned checkpoint into ignored `models/` directories:
+
+```sh
+uv venv --python 3.12 .venv-trending
+uv pip install -p .venv-trending mlx-audio==0.6.4
+uv venv --python 3.12 .venv-supertonic
+uv pip install -p .venv-supertonic supertonic==1.3.1
+hf download groxaxo/Audio8-TTS-Realistic-Air-MLX8-Selective --revision e37e231bd802c804c59b5ee25ef23f2d2195cba1 --local-dir models/audio8-realistic-air
+hf download whitelabel/mlx-q6-higgs-tts-3-4b --revision 7a91348cfaf6847e3969c00348b09d2c5fc36c06 --local-dir models/higgs-tts3
+hf download mlx-community/VoxCPM2-4bit --revision dc9e5c187858da5f4a13dc4c247e297339216381 --local-dir models/voxcpm2
+hf download mlx-community/fish-audio-s2-pro-8bit --revision c8d4481b3f7cbfe64d855c8b7cda7739502fc3ff --local-dir models/fish-s2-pro
+hf download Supertone/supertonic-3 --revision 3cadd1ee6394adea1bd021217a0e650ede09a323 --local-dir models/supertonic-3
+.venv-trending/bin/python scripts/dutch_tts_trending.py --engine audio8-realistic-air --engine higgs-tts3 --engine voxcpm2 --engine fish-s2-pro
+.venv-supertonic/bin/python scripts/dutch_tts_trending.py --engine supertonic3
+```
+
+`--engine` can be repeated to select a subset; `--prompts` accepts the canonical prompt names.
+Each model's exact revision and generation settings are recorded in `scripts/dutch_tts_trending.py`.
 
 ### Parkiet (MPS)
 
@@ -272,6 +349,7 @@ reference voice you recorded yourself with consent.
 | Parkiet | MIT; DAC codec MIT | RAIL-M (use restrictions) | — |
 | Chatterbox | MIT | MIT | Carries an inaudible Perth watermark |
 | KugelAudio | MIT | MIT | Card prohibits deepfakes and impersonation without consent; inaudible AudioSeal watermark |
+| LFM3-Audio-2B | MLX-VLM `0.7.11` | [LFM Open License v1.0](https://huggingface.co/LiquidAI/LFM3-Audio-2B-MLX-4bit/blob/221ddc778422af5354d689b450f1a5e21d2b5616/LICENSE) | Commercial use is limited to entities below USD 10 million in annual revenue; see the full license |
 | Fish Audio Drama 3 | mlx-audio MIT | Fish Audio Community License v1.0 | "Built with Fish Audio"; no imitating an identifiable person without consent; outputs may not train speech or foundation models; commercial use only below USD 500k revenue; hosted services need a separate licence |
 | VibeVoice | MIT | MIT metadata, but the card limits use to research | Samples are a research reference only; not CC BY |
 

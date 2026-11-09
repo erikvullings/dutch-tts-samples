@@ -34,6 +34,33 @@ Do not present these files as recordings of a real person.
 - **KugelAudio** ([kugelaudio/kugelaudio-0-open](https://huggingface.co/kugelaudio/kugelaudio-0-open), MIT):
   the card prohibits deepfakes, misleading content and impersonation without consent.
   Outputs carry an inaudible AudioSeal watermark.
+- **LFM3-Audio-2B** ([LiquidAI/LFM3-Audio-2B](https://huggingface.co/LiquidAI/LFM3-Audio-2B),
+  via [LiquidAI/LFM3-Audio-2B-MLX-4bit](https://huggingface.co/LiquidAI/LFM3-Audio-2B-MLX-4bit)):
+  the model is under the [LFM Open License v1.0](https://huggingface.co/LiquidAI/LFM3-Audio-2B-MLX-4bit/blob/221ddc778422af5354d689b450f1a5e21d2b5616/LICENSE).
+  In brief, it grants use, modification and redistribution subject to its terms, including a
+  USD 10 million annual-revenue threshold for commercial use. The license text does not state
+  separate audio-output terms; check the full license for the applicable use.
+- **Audio8 TTS Realistic Air** ([Edge0/Audio8-TTS-Realistic-Air](https://huggingface.co/Edge0/Audio8-TTS-Realistic-Air),
+  via [the MLX 8-bit conversion](https://huggingface.co/groxaxo/Audio8-TTS-Realistic-Air-MLX8-Selective)):
+  Apache-2.0; the conversion is community-provided and retains upstream terms.
+- **Higgs TTS 3** ([Boson AI model](https://huggingface.co/bosonai/higgs-tts-3-4b),
+  via [the MLX 6-bit conversion](https://huggingface.co/whitelabel/mlx-q6-higgs-tts-3-4b)):
+  [Research and Non-Commercial License](https://huggingface.co/bosonai/higgs-tts-3-4b/blob/main/LICENSE).
+  Public non-commercial demonstrations are permitted; commercial/production uses need a separate license.
+  Attribution: "Built with Higgs TTS 3 licensed from Boson AI USA, Inc." The full agreement and
+  conversion notice are included in `samples/higgs-tts3/LICENSE` and `samples/higgs-tts3/NOTICE`.
+- **VoxCPM2** ([OpenBMB model](https://huggingface.co/openbmb/VoxCPM2), via
+  [the MLX 4-bit conversion](https://huggingface.co/mlx-community/VoxCPM2-4bit)): Apache-2.0.
+  Its card prohibits impersonation, fraud and disinformation.
+- **Fish Audio S2 Pro** ([Fish Audio model](https://huggingface.co/fishaudio/s2-pro), via
+  [the MLX 8-bit conversion](https://huggingface.co/mlx-community/fish-audio-s2-pro-8bit)):
+  [Fish Audio Research License](https://huggingface.co/fishaudio/s2-pro/blob/main/LICENSE.md).
+  Research and non-commercial use only; commercial use requires a separate license. Outputs may not
+  be used to create or improve foundational generative AI models. Attribution: "Built with Fish Audio."
+- **Supertonic 3** ([Supertone/supertonic-3](https://huggingface.co/Supertone/supertonic-3)):
+  [OpenRAIL-M License](https://huggingface.co/Supertone/supertonic-3/blob/main/LICENSE), which grants
+  use subject to its restrictions, including non-consensual impersonation and deceptive content;
+  it also requires disclosure of synthetic content in applicable contexts.
 - **Fish Audio Drama 3** ([fishaudio/drama-3](https://huggingface.co/fishaudio/drama-3), via
   [mlx-community/fish-audio-drama-3-4bit](https://huggingface.co/mlx-community/fish-audio-drama-3-4bit)):
   **Built with Fish Audio.** These Fish Audio Materials are licensed under the Fish Audio

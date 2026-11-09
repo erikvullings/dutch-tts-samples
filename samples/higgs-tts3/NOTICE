@@ -1,0 +1,11 @@
+Boson Higgs TTS 3 is licensed under the Boson Higgs TTS 3 Research and Non-Commercial License, Copyright (c) Boson AI USA, Inc. All Rights Reserved.
+
+Modifications (this repository, 2026-07-22):
+- Quantized to 6-bit (group_size 64, affine, 6.550 bpw) with the official
+  mlx_audio.convert from mlx-audio 0.4.5.
+- Audio codec weights extracted from the LM checkpoint into codec.safetensors
+  (prefix tied.embedding.modality_embeddings.0.model.*).
+- model.safetensors.index.json removed (required for mlx-audio codec discovery).
+- config.json model_type set to "higgs_audio_v3" (was "higgs_multimodal_qwen3");
+  works around model-detection ambiguity in mlx-audio 0.4.5
+  (https://github.com/Blaizzy/mlx-audio/issues/854).
